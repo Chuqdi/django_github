@@ -1,0 +1,38 @@
+{%extends '__base__.html'%} 
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+            <div class="card mb-3">
+                <h3 class="card-header">{{ object.title }}</h3>
+                <div class="card-body">
+                  <h5 class="card-title">Price: {{ object.price }}$ </h5>
+                  <h6 class="card-subtitle text-muted">{{ object.description }}</h6>
+                </div>
+                
+                  <img src="{{object.image.url}}"/>
+                  
+             
+                <div class="card-body">
+                  <a href="{% url 'update_book' object.id %}" class="btn btn-secondary">
+                    Edit
+                  </a>
+                  <a href="{% url 'delete_book' object.id%}" class="btn btn-danger">
+                    Delete
+                  </a>
+                </div>
+                <div class="card-footer text-muted">
+                  {{ object.created_on|date:"Y-m-d"}}
+                </div>
+              </div>
+             
+        </div>
+    </div>
+</div>
+
+{%endblock%}
