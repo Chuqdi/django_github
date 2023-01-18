@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
 from .models import Book
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponse, HttpResponseRedirect
 
 
@@ -52,19 +52,21 @@ class DetailBook(LoginRequiredMixin, DetailView):
 
 
 
-class UpdateBook(LoginRequiredMixin, UpdateView):
+class UpdateBook(LoginRequiredMixin,UserPassesTestMixin, UpdateView):
     template_name="books/update.html"
     model = Book
     fields = ["title", "description","price", "image"]
 
 
-    def get_queryset(self):
-        if not (self.queryset.id == self.request.id):
-            return HttpResponse("YOU ARE NOT AUTHORIZED HERE")
+    def test_func(self):
+        query_set = self.get_object()
+        if not (query_set.user.id == self.request.user.id):
+            return False
+        return True
 
 
 
 class DeleteBook(LoginRequiredMixin, DeleteView):
     template_name="books/delete.html"
     model = Book
-    success_url="dashboard"
+    success_url="/dashboard"
